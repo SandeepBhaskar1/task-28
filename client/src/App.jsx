@@ -20,7 +20,7 @@ export default function App() {
   const createNewTodo = async (e) => {
     e.preventDefault();
     if (content.length > 0) {
-      const res = await fetch("https://task-28.onrender.com//api/todos", {
+      const res = await fetch("/api/todos", {
         method: "POST",
         body: JSON.stringify({ todo: content }),
         headers: {

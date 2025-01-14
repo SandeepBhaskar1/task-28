@@ -7,9 +7,9 @@ export default function Todo(props) {
     const [isEditing, setIsEditing] = useState(false);
     const [newEditedContent, setNewEditedContent] = useState(todo.todo);
 
-    // update todo status 
+    // Update todo status
     const updateTodo = async (todoId, todoStatus) => {
-        const res = await fetch(`https://task-28.onrender.com/api/todos/${todoId}`, {
+        const res = await fetch(`/api/todos/${todoId}`, {
             method: "PUT",
             body: JSON.stringify({ status: !todoStatus }),
             headers: {
@@ -19,41 +19,36 @@ export default function Todo(props) {
 
         const json = await res.json();
         if (json.acknowledged) {
-            setTodos((currentTodos) => {
-                return currentTodos.map((currentTodo) => {
-                    if (currentTodo._id === todoId) {
-                        return { ...currentTodo, status: !todoStatus };
-                    }
-                    return currentTodo;
-                });
-            });
+            setTodos((currentTodos) =>
+                currentTodos.map((currentTodo) =>
+                    currentTodo._id === todoId
+                        ? { ...currentTodo, status: !todoStatus }
+                        : currentTodo
+                )
+            );
         }
     };
 
-    // delete todo
+    // Delete todo
     const deleteTodo = async (todoId) => {
-        const res = await fetch(`https://task-28.onrender.com/api/todos/${todoId}`, {
+        const res = await fetch(`/api/todos/${todoId}`, {
             method: "DELETE",
         });
 
         const json = await res.json();
 
         if (json.deletedTodo && json.deletedTodo.acknowledged) {
-            setTodos((currentTodos) => {
-                return currentTodos.filter((currentTodo) => currentTodo._id !== todoId);
-            });
+            setTodos((currentTodos) =>
+                currentTodos.filter((currentTodo) => currentTodo._id !== todoId)
+            );
         }
     };
 
-    //   edit todo
+    // Save edited todo
     const saveEditedTodo = async () => {
-        console.log("Save button clicked");
-        console.log("New content:", newEditedContent);
-
         if (newEditedContent.trim().length > 0) {
             try {
-                console.log("Sending fetch request to update todo");
-                const res = await fetch(`https://task-28.onrender.com/api/todos/${todo._id}`, {
+                const res = await fetch(`/api/todos/${todo._id}`, {
                     method: "PUT",
                     body: JSON.stringify({ todo: newEditedContent }),
                     headers: {
@@ -61,35 +56,25 @@ export default function Todo(props) {
                     },
                 });
 
-                console.log("Fetch response received");
-
                 if (!res.ok) {
                     throw new Error(`Failed to update todo. Status: ${res.status}`);
                 }
 
                 const updatedTodo = await res.json();
-                console.log("Server response:", updatedTodo);
 
                 if (updatedTodo.acknowledged) {
-                    console.log("Todo updated successfully in the backend");
                     setTodos((currentTodos) =>
                         currentTodos.map((t) =>
                             t._id === todo._id ? { ...t, todo: newEditedContent } : t
                         )
                     );
                     setIsEditing(false);
-                } else {
-                    console.log("Update was not acknowledged by the server");
                 }
             } catch (error) {
                 console.error("Error updating todo:", error);
             }
-        } else {
-            console.log("New content is empty or invalid");
         }
     };
-
-
 
     return (
         <div className="todo">
@@ -100,7 +85,9 @@ export default function Todo(props) {
                         value={newEditedContent}
                         onChange={(e) => setNewEditedContent(e.target.value)}
                     />
-                    <button className="todo__save" onClick={saveEditedTodo}><FontAwesomeIcon icon={faSave} /></button>
+                    <button className="todo__save" onClick={saveEditedTodo}>
+                        <FontAwesomeIcon icon={faSave} />
+                    </button>
                 </div>
             ) : (
                 <div
@@ -113,15 +100,13 @@ export default function Todo(props) {
             )}
 
             <div className="todo__actions">
-
                 <button
                     className="todo__edit"
                     onClick={() => {
                         if (!todo.status) {
-                            setIsEditing(prevState => !prevState);
+                            setIsEditing((prevState) => !prevState);
                         }
-                    }
-                    }
+                    }}
                 >
                     <FontAwesomeIcon icon={faEdit} />
                 </button>

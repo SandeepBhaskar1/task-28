@@ -7,7 +7,7 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': {
-        target: 'http://localhost:4292', // Your backend URL
+        target: 'https://task-28.onrender.com', // Your backend URL
         changeOrigin: true,
         secure: false,
       },
