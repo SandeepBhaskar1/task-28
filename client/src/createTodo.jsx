@@ -9,7 +9,7 @@ export default function Todo(props) {
 
     // Update todo status
     const updateTodo = async (todoId, todoStatus) => {
-        const res = await fetch(`/api/todos/${todoId}`, {
+        const res = await fetch(`https://task-28.onrender.com/api/todos/${todoId}`, {
             method: "PUT",
             body: JSON.stringify({ status: !todoStatus }),
             headers: {
@@ -31,7 +31,7 @@ export default function Todo(props) {
 
     // Delete todo
     const deleteTodo = async (todoId) => {
-        const res = await fetch(`/api/todos/${todoId}`, {
+        const res = await fetch(`https://task-28.onrender.com/api/todos/${todoId}`, {
             method: "DELETE",
         });
 
@@ -48,7 +48,7 @@ export default function Todo(props) {
     const saveEditedTodo = async () => {
         if (newEditedContent.trim().length > 0) {
             try {
-                const res = await fetch(`/api/todos/${todo._id}`, {
+                const res = await fetch(`https://task-28.onrender.com/api/todos/${todo._id}`, {
                     method: "PUT",
                     body: JSON.stringify({ todo: newEditedContent }),
                     headers: {
